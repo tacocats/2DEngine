@@ -1,7 +1,3 @@
-/**
- * Created by Jack on 6/11/2016.
- */
-
 import java.io.*;
 import java.net.*;
 
