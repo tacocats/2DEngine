@@ -1,8 +1,3 @@
-/**
- * Created by Jack on 6/11/2016.
- */
-
-
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.CallbackI;
 
