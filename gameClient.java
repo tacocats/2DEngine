@@ -65,6 +65,13 @@ public class gameClient  {
 
     public void render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glMatrixMode(GL_MODELVIEW); //Switch to the drawing perspective
+        glLoadIdentity(); //Reset the drawing perspective
+        //Triangle
+        glVertex3f(-0.5f, 0.5f, -5.0f);
+        glVertex3f(-1.0f, 1.5f, -5.0f);
+        glVertex3f(-1.5f, 0.5f, -5.0f);
+        glEnd(); //End triangle coordinates
         glfwSwapBuffers(client);
     }
 
@@ -98,15 +105,16 @@ public class gameClient  {
 
         // Sets the initial position of our game client.
         glfwSetWindowPos(client, 100, 100);
-        // Sets the context of GLFW, this is vital for our program to work.
+
+        // Sets the context of GLFW
         glfwMakeContextCurrent(client);
 
         GL.createCapabilities();
 
-        // finally shows our created client in all it's glory.
+        // Show the window
         glfwShowWindow(client);
 
-        glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glEnable(GL_DEPTH_TEST);
         System.out.println("OpenGL: " + glGetString(GL_VERSION));
     }
