@@ -21,27 +21,35 @@ import static org.lwjgl.system.MemoryUtil.*;
 class serverConnection {
 
     public Socket echoSocket;
-    public PrintWriter out;
+    PrintWriter out;
     public BufferedReader in;
-    public BufferedReader stdin;
+    public BufferedReader stdIn;
 
     // Create a connection to the server when a new instance is created
     public serverConnection() {
-        try (
-                Socket echoSocket = new Socket("localhost", 2555);
-                PrintWriter out = new PrintWriter(echoSocket.getOutputStream(), true);
-                BufferedReader in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
-                BufferedReader stdIn = new BufferedReader (new InputStreamReader(System.in))
-        ){
+        try {
+                echoSocket = new Socket("localhost", 2555);
+                out = new PrintWriter(echoSocket.getOutputStream(), true);
+                in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
+                stdIn = new BufferedReader (new InputStreamReader(System.in));
 
+            System.out.println(out);
             System.out.println("Client Connected to the server!");
-
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + "localhost");
             System.exit(1);
         } catch (IOException e) {
             System.err.println("Couldn't get I/O for the connection to " + "localhost");
             System.exit(1);
+        }
+    }
+
+    public void sendMessage () {
+        out.println("test");
+        try {
+            System.out.println(in.readLine());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
@@ -92,6 +100,7 @@ public class gameClient  {
                     switch (key) {
                         case 263: // left
                             velX -= 1;
+                            server.sendMessage();
                             break;
                         case 262: // right
                             velX += 1;
