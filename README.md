@@ -15,3 +15,9 @@ This engine is written completely in java, including all tools for it.  This eng
 LWJGL can be obtained here https://www.lwjgl.org/
 
 ----------
+**Planned Tools**
+
+ - Level editor
+ - Sprite animation editor
+ - Various debug tools built into client and seperate
+ - In-game console to allow for allowing running custom scripts/debugging them and testing various features
