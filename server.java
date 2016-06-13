@@ -7,9 +7,6 @@ import java.io.*;
 import java.net.*;
 
 
-/**
- * Created by Jack on 6/11/2016.
- */
 public class server {
 
     public server() {

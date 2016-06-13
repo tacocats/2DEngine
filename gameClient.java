@@ -1,7 +1,3 @@
-/**
- * Created by Jack on 6/12/2016.
- */
-
 // Import required GLFW libraries
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWKeyCallbackI;
@@ -60,29 +56,58 @@ public class gameClient  {
     // Whether or not the game client is running
     public boolean clientRunning = false;
     public long client;
-
+    public int posX = 100;
+    public int posY = 100;
+    public int velX = 0;
+    public int velY = 0;
 
 
     public void render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glMatrixMode(GL_MODELVIEW); //Switch to the drawing perspective
-        glLoadIdentity(); //Reset the drawing perspective
-        //Triangle
-        glVertex3f(-0.5f, 0.5f, -5.0f);
-        glVertex3f(-1.0f, 1.5f, -5.0f);
-        glVertex3f(-1.5f, 0.5f, -5.0f);
-        glEnd(); //End triangle coordinates
+
+        glColor3f(05.f, 0.5f, 0.5f);
+
+        glBegin(GL_QUADS);
+        glVertex2f(posX, posY);
+        glVertex2f(posX+200,posY);
+        glVertex2f(posX+200,posY+200);
+        glVertex2f(posX,posY+200);
+        glEnd();
+
         glfwSwapBuffers(client);
     }
 
     public void update (serverConnection server) {
         glfwPollEvents();
+        posX += velX;
+        posY += velY;
 
-        // Key press input
+        // Key press input, this needs to be cleaned up and moved to it's own class later on, with public variables to be accessed through custom scripts
         glfwSetKeyCallback(client, keyCallback = new GLFWKeyCallback() {
             @Override
             public void invoke(long window, int key, int scancode, int action, int mods) {
-                System.out.println(key);
+                System.out.println("action " + action);
+                // Checks if key was pressed down than what key
+                if (action == 1) {
+                    switch (key) {
+                        case 263: // left
+                            velX -= 1;
+                            break;
+                        case 262: // right
+                            velX += 1;
+                            break;
+                        case 265: // down
+                            velY -= 1;
+                            break;
+                        case 264: // up
+                            velY += 1;
+                            break;
+                    }
+                } else if (action == 0) {
+                    if (key == 263 || key == 262) velX = 0;
+
+                    else if (key == 265 || key == 264) velY = 0;
+                }
             }
         });
     }
@@ -117,6 +142,12 @@ public class gameClient  {
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glEnable(GL_DEPTH_TEST);
         System.out.println("OpenGL: " + glGetString(GL_VERSION));
+
+        // Possibly add this code to loop
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity(); // Resets any previous projection matrices
+        glOrtho(0, 640, 480, 0, 1, -1);
+        glMatrixMode(GL_MODELVIEW);
     }
 
     public void run() {
