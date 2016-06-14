@@ -21,3 +21,4 @@ LWJGL can be obtained here https://www.lwjgl.org/
  - Sprite animation editor
  - Various debug tools built into client and seperate
  - In-game console to allow for allowing running custom scripts/debugging them and testing various features
+ - Remote Connection tool to allow easy managing of server
