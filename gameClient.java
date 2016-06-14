@@ -44,8 +44,8 @@ class serverConnection {
         }
     }
 
-    public void sendMessage () {
-        out.println("test");
+    public void sendMessage (String message) {
+        out.println(message);
         try {
             System.out.println(in.readLine());
         } catch (IOException e) {
@@ -100,7 +100,7 @@ public class gameClient  {
                     switch (key) {
                         case 263: // left
                             velX -= 1;
-                            server.sendMessage();
+                            server.sendMessage("move");
                             break;
                         case 262: // right
                             velX += 1;
