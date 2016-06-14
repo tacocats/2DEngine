@@ -10,11 +10,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-// Used for sending information to all running clients
-class broadCast extends Thread{
+
+// This is a class containing player information. It is used by clientThread to store various information such as player location.
+class player {
+
+    public int posX = 0;
+    public int posY = 0;
+    private Socket clientSocket;
+
+    public player(Socket sentSocket) {
+        this.clientSocket = sentSocket;
+    }
+
+    // Returns the socket
+    public Socket getSocket () {
+        return (this.clientSocket);
+    }
+}
+
+
+// Class the keeps track of all clients connected to the server
+class clientConnections extends Thread {
 
     // List of threads running/clients
-    public static ArrayList<Socket> socketList = new ArrayList<Socket>();
+
+    // Old list only kept track of sockets connected new one keeps track of information as well
+    //public static ArrayList<Socket> socketList = new ArrayList<Socket>();
+    public static ArrayList<player> clientList = new ArrayList<player>();
+
+}
+
+// Used for sending information to all running clients
+class broadCast extends clientConnections {
 
     public void messageClients(String message) {
 
@@ -22,12 +49,13 @@ class broadCast extends Thread{
         //Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
         //Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
 
-
         // Loops through the list of sockets running and sends the message to them
-        for (Socket i : socketList) {
-            try {
+        for (player x : clientList ) {
 
-                PrintWriter out = new PrintWriter (i.getOutputStream(), true);
+            Socket i = x.getSocket();
+            System.out.println(i);
+            try {
+                PrintWriter out = new PrintWriter(i.getOutputStream(), true);
                 out.println(message);
             } catch (IOException e) {
                 System.out.println(e.getStackTrace());
@@ -36,13 +64,28 @@ class broadCast extends Thread{
     }
 }
 
-// A client will be assigned a thread on the server
+
+// This should be renamed some time in future since it's sorta a stupid name..
+// Class that allows calls to get information from other running clients on the server. This reads from connection's client list and get information from the player class of the client
+// When is this class of use? When a player connects to the server or something
+class severClients extends clientConnections {
+
+    // TODO
+    // Gets information from clients already connected to the server and returns it
+    public static void getConnectedClients() {
+
+    }
+}
+
+
+// A client will be assigned a thread on the server. This thread retrieves all input from the client and sends information back to the client.
 class clientThread extends broadCast {
     public Socket socket;
     public InputStream input = null;
     public BufferedReader reader = null;
     //DataOutputStream out = null;
     public PrintWriter out = null;
+
 
     public clientThread (Socket clientSocket) {
         this.socket = clientSocket;
@@ -61,19 +104,20 @@ class clientThread extends broadCast {
 
         String inputLine, outputLine;
 
+
+        //TODO switch all this over to switch statement
         while (true) {
             try {
                 while ((inputLine = reader.readLine()) != null) {
-                    if (inputLine.equals("test") == true) {
-                        System.out.println("I got the message " + inputLine);
-                        out.println("echo back to client");
+                    switch (inputLine) {
+                        case "move":
+                            messageClients(socket + "moved!");
+                            System.out.println("I got the move");
+                            break;
 
-                    } else if (inputLine.equals("close") == true) {
-                        out.print("I got the test message");
-                        System.out.println("closing the server");
-                    } else {
-                        System.out.println("Error undefined message '" + inputLine + "'" + " sent from the client");
-                        out.println("Error Undefined message");
+                        default:
+                            out.println("Error Undefined message");
+                            break;
                     }
                 }
             } catch (IOException e) {
@@ -84,9 +128,10 @@ class clientThread extends broadCast {
 
 }
 
+// Start the server
 public class server {
 
-    static final int port = 2555;
+    private static final int port = 2555;
 
     public server() {
         boolean serverEnabled = true;
@@ -100,7 +145,7 @@ public class server {
 
         }
 
-		while (serverEnabled == true) {
+		while (serverEnabled) {
             try {
                 clientSocket = srvr.accept();
 
@@ -111,7 +156,12 @@ public class server {
 
             // Create a new thread for the client
             new clientThread(clientSocket).start();
-            broadCast.socketList.add(clientSocket);
+            clientConnections.clientList.add(new player(clientSocket));
+            System.out.println(clientConnections.clientList);
+            System.out.println(clientSocket);
+            for (player i : clientConnections.clientList) {
+                System.out.println("a - " + i.getSocket());
+            }
         }
     }
 
