@@ -83,7 +83,6 @@ class clientThread extends broadCast {
     public Socket socket;
     public InputStream input = null;
     public BufferedReader reader = null;
-    //DataOutputStream out = null;
     public PrintWriter out = null;
 
 

@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -24,6 +25,7 @@ class serverConnection {
     PrintWriter out;
     public BufferedReader in;
     public BufferedReader stdIn;
+    private LinkedBlockingQueue<String> messages = new LinkedBlockingQueue<>(); // Queue for messages
 
     // Create a connection to the server when a new instance is created
     public serverConnection() {
@@ -33,7 +35,6 @@ class serverConnection {
                 in = new BufferedReader(new InputStreamReader(echoSocket.getInputStream()));
                 stdIn = new BufferedReader (new InputStreamReader(System.in));
 
-            System.out.println(out);
             System.out.println("Client Connected to the server!");
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + "localhost");
@@ -46,12 +47,64 @@ class serverConnection {
 
     public void sendMessage (String message) {
         out.println(message);
-        try {
-            System.out.println(in.readLine());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
+
+    // Retrieves all messages from the server and adds it to the messages queue
+    public void retrieveServerMessages() {
+
+        Thread retrieve = new Thread(){
+            public void run(){
+
+                String inputLine;
+
+                while(true){
+
+                    try {
+                        while((inputLine = in.readLine()) != null) {
+                            messages.put(inputLine);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        retrieve.setDaemon(true);
+        retrieve.start();
+    }
+
+    // Handles the messages sent from the server and added to the queue
+    public void handleQueue() {
+        Thread handleMessages = new Thread() {
+            public void run(){
+                while(true){
+                    try{
+                        Object message = messages.take();
+                        System.out.println("Message Received: " + message.toString());
+                    }
+                    catch(InterruptedException e){ }
+                }
+            }
+        };
+
+        handleMessages.start();
+    }
+
+}
+
+// information about the player
+class playerInformation {
+    public int posyX;
+    public int posX = 100;
+    public int posY = 100;
+    public int velX = 0;
+    public int velY = 0;
+}
+
+// Information about other players etc
+class gameInformation {
 }
 
 // Creates an instance of the game client
@@ -63,12 +116,10 @@ public class gameClient  {
 
     // Whether or not the game client is running
     public boolean clientRunning = false;
-    public long client;
-    public int posX = 100;
-    public int posY = 100;
-    public int velX = 0;
-    public int velY = 0;
 
+    playerInformation player = new playerInformation();
+
+    public long client;
 
     public void render() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -76,10 +127,10 @@ public class gameClient  {
         glColor3f(05.f, 0.5f, 0.5f);
 
         glBegin(GL_QUADS);
-        glVertex2f(posX, posY);
-        glVertex2f(posX+200,posY);
-        glVertex2f(posX+200,posY+200);
-        glVertex2f(posX,posY+200);
+        glVertex2f(player.posX, player.posY);
+        glVertex2f(player.posX+200,player.posY);
+        glVertex2f(player.posX+200,player.posY+200);
+        glVertex2f(player.posX,player.posY+200);
         glEnd();
 
         glfwSwapBuffers(client);
@@ -87,8 +138,8 @@ public class gameClient  {
 
     public void update (serverConnection server) {
         glfwPollEvents();
-        posX += velX;
-        posY += velY;
+        player.posX += player.velX;
+        player.posY += player.velY;
 
         // Key press input, this needs to be cleaned up and moved to it's own class later on, with public variables to be accessed through custom scripts
         glfwSetKeyCallback(client, keyCallback = new GLFWKeyCallback() {
@@ -99,23 +150,23 @@ public class gameClient  {
                 if (action == 1) {
                     switch (key) {
                         case 263: // left
-                            velX -= 1;
+                            player.velX -= 1;
                             server.sendMessage("move");
                             break;
                         case 262: // right
-                            velX += 1;
+                            player.velX += 1;
                             break;
                         case 265: // down
-                            velY -= 1;
+                            player.velY -= 1;
                             break;
                         case 264: // up
-                            velY += 1;
+                            player.velY += 1;
                             break;
                     }
                 } else if (action == 0) {
-                    if (key == 263 || key == 262) velX = 0;
+                    if (key == 263 || key == 262) player.velX = 0;
 
-                    else if (key == 265 || key == 264) velY = 0;
+                    else if (key == 265 || key == 264) player.velY = 0;
                 }
             }
         });
@@ -166,6 +217,10 @@ public class gameClient  {
 
         // Connect to the server
         serverConnection server = new serverConnection();
+
+        // Start retrieving messages from the server
+        server.retrieveServerMessages();
+        server.handleQueue();
 
         while (clientRunning) {
             update(server);
