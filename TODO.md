@@ -2,8 +2,16 @@
 **TODO**
 
 This is a to do page covering the current plans and features that need to be completed.
- - Client and Server's code really needs to be cleaned up.
+
 ----------
+**Major**
+Things that need to be done first
+
+ - clean up client and server code
+ - Create a trello page for this
+
+----------
+
 **Server**
 
  - Server needs to be updated to take requests from various clients and create threads for each of them, currently it only supports one client with way it is written
@@ -40,9 +48,11 @@ This is currently still being decided on how it should be implement. Most likely
  ----------
  **Debugging tools**
 
-  - Simple GUI to grab basic client information and display it
-  - Simple cli tool to communicate with server for testing
+ - Simple GUI to grab basic client information and display it
+ - Simple cli tool to communicate with server for testing
 
  ----------
  **Remote control tool**
- Allow connecting to server and managing files etc.
+
+ - Allow connecting to server and managing files etc.
+
