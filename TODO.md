@@ -2,7 +2,7 @@
 **TODO**
 
 This is a to do page covering the current plans and features that need to be completed.
-
+ - Client and Server's code really needs to be cleaned up.
 ----------
 **Server**
 
@@ -42,3 +42,7 @@ This is currently still being decided on how it should be implement. Most likely
 
   - Simple GUI to grab basic client information and display it
   - Simple cli tool to communicate with server for testing
+
+ ----------
+ **Remote control tool**
+ Allow connecting to server and managing files etc.
