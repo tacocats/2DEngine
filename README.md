@@ -11,7 +11,7 @@ The main goals of this engine are the following:
 
 ----------
 **What does this engine use?**
-This engine is written completely in java, including all tools for it.  This engine uses Lightweight Java Game Library 3, which is Java library that enables cross-platform access to popular native APIs useful in the development of graphics (OpenGL), audio (OpenAL) and parallel computing (OpenCL) applications. 
+This engine is written in java, while most tools for it are written in Python.  This engine uses Lightweight Java Game Library 3, which is Java library that enables cross-platform access to popular native APIs useful in the development of graphics (OpenGL), audio (OpenAL) and parallel computing (OpenCL) applications. The tools use the Tkinter GUI library for Python.
 LWJGL can be obtained here https://www.lwjgl.org/
 
 ----------
