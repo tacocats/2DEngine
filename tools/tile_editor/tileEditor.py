@@ -60,6 +60,9 @@ class levelManipulation():
         newX, newY = self.determinePos(x, y)
         widget.create_rectangle(newX, newY, newX+32, newY+32, fill="red", width=0)
 
+# Wether or not the user is drawing on the screen
+isDrawing = False
+
 def keypress(key):
     print (key)
 
@@ -68,15 +71,48 @@ def mousePress(event):
     #print ("fixed - " + str(levelManipulation.determinePos(event.x, event.y)))
     #event.widget.create_rectangle(20, 20, 50, 50, fill="blue")
     #levelManipulation.displayLevel(event.widget)
-    levelManipulation.drawTile(levelManipulation, event.widget, event.x, event.y)
+
+    global isDrawing
+    isDrawing = True
+
+    canvas = event.widget
+    x = canvas.canvasx(event.x)
+    y = canvas.canvasy(event.y)
+    levelManipulation.drawTile(levelManipulation, event.widget, x, y)
+
+def release(event):
+    print("released!")
+    global isDrawing
+    isDrawing = False
+
+def motion(event):
+    if (isDrawing == True):
+        canvas = event.widget
+        x = canvas.canvasx(event.x)
+        y = canvas.canvasy(event.y)
+        levelManipulation.drawTile(levelManipulation, event.widget, x, y)
 
 # Create the window
 def createWindow():
     root = Tk()
 
+    # ToolBox Container
+    toolbox = Frame(root)
+    toolbox.pack(side=BOTTOM)
+    greenbutton = Button(toolbox, text="Tool", fg="brown")
+    greenbutton.pack( side = LEFT )
+
     # Paned windows
     pScene = PanedWindow(root, orient=HORIZONTAL)
-    pScene.pack(expand=True)
+    pScene.pack(fill=BOTH, expand=True)
+
+    # Scene container
+    sceneContainer = Frame(pScene)
+    pScene.add(sceneContainer)
+
+    # Tileset Container
+    tilesetContainer = Frame(pScene)
+    pScene.add(tilesetContainer)
 
     # The menubar
     menubar = Menu(root)
@@ -91,19 +127,34 @@ def createWindow():
     editMenu.add_command(label="Clear", command=clearMenu)
     menubar.add_cascade(label="Edit", menu=editMenu)
 
+    # Add a scrollbar to canvas and tileset
+    tScrollbarV = Scrollbar(sceneContainer, orient=VERTICAL)
+    tScrollbarV.pack(side=LEFT, fill=Y)
+    tScrollbarH = Scrollbar(sceneContainer, orient=HORIZONTAL)
+    tScrollbarH.pack(side=BOTTOM, fill=X)
 
     # Canvas for the scene
-    scene = Canvas(pScene, height=500, width=700, bd=0, highlightthickness=0, relief='ridge')
-    pScene.add(scene)
+    scene = Canvas(sceneContainer, height=500, width=700, bd=0, highlightthickness=0, relief='ridge',scrollregion=(0,0,1000,1000), yscrollcommand=tScrollbarV.set, xscrollcommand=tScrollbarH.set, bg="black")
+
+    # Key bindings for the scene
     scene.bind("<Button-1>", mousePress)
-    root.bind("<Key>", keypress)
+    scene.bind("<Key>", keypress)
+    scene.bind("<Motion>", motion)
+    scene.bind("<ButtonRelease-1>", release)
+
+    scene.pack(side=RIGHT, fill=BOTH, expand=True)
+    tScrollbarV.config(command = scene.yview)
+    tScrollbarH.config(command = scene.xview)
 
 
     # Canvas for the tileset
-    tileset = Canvas(pScene, bg="red", height=50, width=50)
-    pScene.add(tileset)
+    tileset = Canvas(tilesetContainer, bg="red", height=50, width=50)
+    tileset.pack(side=RIGHT, fill=BOTH, expand=True)
 
     root.config(menu=menubar)
+
+    #Set title
+    root.wm_title("Tile Editor")
 
     # Create the opening level
     levelManipulation.createLevel(levelManipulation, 50, 50)
