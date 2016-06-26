@@ -1,96 +1,57 @@
 from tkinter import *
-from tileio import *
 from menuOptions import *
+from PIL import Image, ImageFilter, ImageTk
+from tileset_module import tilesetManipulation
+from scene_module import levelManipulation, tile, level
 
-# A tile
-class tile():
-    x = 0
-    y = 0
-
-# A level
-class level():
-    levelSizeX = 0
-    levelSizeY = 0
-    levelTiles = []
-
-    def setLevelSize(self, x, y):
-        levelSizeX = x
-        levelSizeY = y
-
-# Class for manipulating tiles
-class levelManipulation():
-    # Place a tile at the x, y, z pos. Z can be used for layeros
-    def placeTile(x, y, z):
-       print ("place tile")
-
-    # Determines where to place the tile
-    def determinePos(x, y):
-        fixedX = (x - x%32)
-        fixedY = (y- y%32)
-        return (fixedX, fixedY)
-
-    # Create a new level
-    def createLevel(self, sizeX, sizeY):
-        tiles = []
-        # Loops through adding all the tiles
-        for total in range(0, sizeX*sizeY):
-            tiles.append(tile)
-
-        level.levelTiles = tiles
-        level.levelSizeX = sizeX
-        level.levelSizeY = sizeY
-
-    def displayLevel(widget):
-        #Position to place the tile at
-        posX = 0
-        posY = 0
-
-        # Checks when to start positioning tiles from right to left
-        for i in range(0, len(level.levelTiles)):
-            print (level.levelSizeX)
-            if (i > level.levelSizeX - 2 and (i % level.levelSizeX) == 1):
-                widget.create_rectangle(posX, posY, posX+32, posY+32, fill="black")
-                posX = 0
-                posY += 32
-            else:
-                widget.create_rectangle(posX, posY, posX+32, posY+32, fill="black")
-                posX += 32
-
-    def drawTile(self, widget, x, y):
-        newX, newY = self.determinePos(x, y)
-        widget.create_rectangle(newX, newY, newX+32, newY+32, fill="red", width=0)
+# Globals############################################
 
 # Wether or not the user is drawing on the screen
 isDrawing = False
+
+tileset = None
+scene = None
+
+levelManip = levelManipulation()
+tilesetManip = tilesetManipulation()
+######################################################
 
 def keypress(key):
     print (key)
 
 def mousePress(event):
     #print("x - " + str(event.x) + " y - " + str(event.y))
-    #print ("fixed - " + str(levelManipulation.determinePos(event.x, event.y)))
+    #print ("fixed - " + str(levelManip.determinePos(event.x, event.y)))
     #event.widget.create_rectangle(20, 20, 50, 50, fill="blue")
-    #levelManipulation.displayLevel(event.widget)
+    #levelManip.displayLevel(event.widget)
 
     global isDrawing
     isDrawing = True
-
     canvas = event.widget
-    x = canvas.canvasx(event.x)
-    y = canvas.canvasy(event.y)
-    levelManipulation.drawTile(levelManipulation, event.widget, x, y)
+    if (canvas == scene):
+        x = canvas.canvasx(event.x)
+        y = canvas.canvasy(event.y)
+
+        tileX, tileY, tileImage = tilesetManip.getSelectedTile()
+        levelManip.drawTile(event.widget, x, y, tileImage, tileX, tileY)
+    elif (canvas == tileset):
+        print("tileset")
+        x = canvas.canvasx(event.x)
+        y = canvas.canvasy(event.y)
+        tilesetManip.setSelectedTile(x, y)
 
 def release(event):
-    print("released!")
     global isDrawing
     isDrawing = False
 
 def motion(event):
-    if (isDrawing == True):
-        canvas = event.widget
-        x = canvas.canvasx(event.x)
-        y = canvas.canvasy(event.y)
-        levelManipulation.drawTile(levelManipulation, event.widget, x, y)
+    if (event.widget == scene):
+        if (isDrawing == True):
+            canvas = event.widget
+            x = canvas.canvasx(event.x)
+            y = canvas.canvasy(event.y)
+            tileX, tileY, tileImage = tilesetManip.getSelectedTile()
+            levelManip.drawTile(event.widget, x, y, tileImage, tileX, tileY)
 
 # Create the window
 def createWindow():
@@ -105,7 +66,7 @@ def createWindow():
     # Paned windows
     pScene = PanedWindow(root, orient=HORIZONTAL)
     pScene.pack(fill=BOTH, expand=True)
-
+    
     # Scene container
     sceneContainer = Frame(pScene)
     pScene.add(sceneContainer)
@@ -127,14 +88,25 @@ def createWindow():
     editMenu.add_command(label="Clear", command=clearMenu)
     menubar.add_cascade(label="Edit", menu=editMenu)
 
+    tilesetMenu = Menu(menubar, tearoff=0)
+    tilesetMenu.add_command(label="Select tileset", command=selectTileset)
+    menubar.add_cascade(label="Tileset", menu=tilesetMenu)
+
     # Add a scrollbar to canvas and tileset
-    tScrollbarV = Scrollbar(sceneContainer, orient=VERTICAL)
+    sScrollbarV = Scrollbar(sceneContainer, orient=VERTICAL)
+    sScrollbarV.pack(side=LEFT, fill=Y)
+    sScrollbarH = Scrollbar(sceneContainer, orient=HORIZONTAL)
+    sScrollbarH.pack(side=BOTTOM, fill=X)
+
+    tScrollbarV = Scrollbar(tilesetContainer, orient=VERTICAL)
     tScrollbarV.pack(side=LEFT, fill=Y)
-    tScrollbarH = Scrollbar(sceneContainer, orient=HORIZONTAL)
+    tScrollbarH = Scrollbar(tilesetContainer, orient=HORIZONTAL)
     tScrollbarH.pack(side=BOTTOM, fill=X)
 
+
     # Canvas for the scene
-    scene = Canvas(sceneContainer, height=500, width=700, bd=0, highlightthickness=0, relief='ridge',scrollregion=(0,0,1000,1000), yscrollcommand=tScrollbarV.set, xscrollcommand=tScrollbarH.set, bg="black")
+    global scene
+    scene = Canvas(sceneContainer, height=500, width=700, bd=0, highlightthickness=0, relief='ridge',scrollregion=(0,0,1000,1000), yscrollcommand=sScrollbarV.set, xscrollcommand=sScrollbarH.set, bg="black")
 
     # Key bindings for the scene
     scene.bind("<Button-1>", mousePress)
@@ -143,13 +115,22 @@ def createWindow():
     scene.bind("<ButtonRelease-1>", release)
 
     scene.pack(side=RIGHT, fill=BOTH, expand=True)
-    tScrollbarV.config(command = scene.yview)
-    tScrollbarH.config(command = scene.xview)
-
+    sScrollbarV.config(command = scene.yview)
+    sScrollbarH.config(command = scene.xview)
 
     # Canvas for the tileset
-    tileset = Canvas(tilesetContainer, bg="red", height=50, width=50)
+    global tileset
+    tileset = Canvas(tilesetContainer, height=50, width=50, bg="black", yscrollcommand=tScrollbarV.set, xscrollcommand=tScrollbarH.set)
     tileset.pack(side=RIGHT, fill=BOTH, expand=True)
+    tScrollbarV.config(command = tileset.yview)
+    tScrollbarH.config(command = tileset.xview)
+
+    # Key bindings for the tileset
+    tileset.bind("<Button-1>", mousePress)
+    tileset.bind("<Key>", keypress)
+    tileset.bind("<Motion>", motion)
+    tileset.bind("<ButtonRelease-1>", release)
+
 
     root.config(menu=menubar)
 
@@ -157,7 +138,12 @@ def createWindow():
     root.wm_title("Tile Editor")
 
     # Create the opening level
-    levelManipulation.createLevel(levelManipulation, 50, 50)
+    levelManip.createLevel(50, 50, scene)
+    levelManip.displayLevel()
+
+    # Set the tileset
+    tilesetManip.setTileset(tileset, "tileset.png")
+
     root.mainloop()
 
 window = createWindow()

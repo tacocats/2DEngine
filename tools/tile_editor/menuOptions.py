@@ -1,14 +1,19 @@
+from tileio import *
+
 def newMenu():
     print ("Crete new level")
 
 def openMenu():
     print ("open level")
 
+# level is passed to exporter
 def saveMenu():
-    print ("save level")
-
+    print ()
 def saveAsMenu():
     print ("Save as menu")
 
 def clearMenu():
-    print("Clear menu")
+    print ("clear the level")
+
+def selectTileset():
+    print("select the tileset")
