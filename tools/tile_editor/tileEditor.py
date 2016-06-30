@@ -66,7 +66,7 @@ def createWindow():
     # Paned windows
     pScene = PanedWindow(root, orient=HORIZONTAL)
     pScene.pack(fill=BOTH, expand=True)
-    
+
     # Scene container
     sceneContainer = Frame(pScene)
     pScene.add(sceneContainer)
@@ -80,7 +80,7 @@ def createWindow():
     fileMenu = Menu(menubar, tearoff=0)
     fileMenu.add_command(label="New", command=newMenu)
     fileMenu.add_command(label="Open", command=openMenu)
-    fileMenu.add_command(label="Save", command=saveMenu)
+    fileMenu.add_command(label="Save", command=lambda:saveMenu("testzzz", levelManip.levelz))
     fileMenu.add_command(label="Save As", command=saveAsMenu)
     menubar.add_cascade(label="File", menu=fileMenu)
 

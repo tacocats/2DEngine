@@ -7,8 +7,8 @@ def openMenu():
     print ("open level")
 
 # level is passed to exporter
-def saveMenu():
-    print ()
+def saveMenu(levelName, level):
+    exporter().exportLevel(levelName, level)
 def saveAsMenu():
     print ("Save as menu")
 
