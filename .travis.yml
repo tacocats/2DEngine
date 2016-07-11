@@ -1,3 +1,3 @@
-lanuage: java 
-jdk:
-  - openjdk6
+lanuage: python
+script:
+  - tools/tile_editor/
