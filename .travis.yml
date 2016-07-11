@@ -1,5 +1,5 @@
 lanuage: python
-script: python tools/tile_editor/tile_editor/tileEditor.py
+script: python tools/tile_editor/tileEditor.py
 
 branches:
   only:
