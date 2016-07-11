@@ -7,7 +7,7 @@ This is a to do page covering the current plans and features that need to be com
 **Major**
 Things that need to be done first
 
- - clean up client and server code
+ - Clean up client and server code
  - Create a trello page for this
 
 ----------
@@ -25,7 +25,6 @@ Things that need to be done first
 
  - Movement System needs to be rewritten in it's own class, with various variables left open and editable for the future API
  - Add various events such as mouse events 
- - 
 
 ----------
 **Levels and Level Editor**
