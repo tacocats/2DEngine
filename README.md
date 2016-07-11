@@ -1,4 +1,4 @@
-# 2DEngine
+# 2DEngine https://travis-ci.org/tacocats/2DEngine.svg?branch=master
 
 ----------
 **What is this engine?**
