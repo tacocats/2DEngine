@@ -28,6 +28,6 @@ LWJGL can be obtained here https://www.lwjgl.org/
  - Remote Connection tool to allow easy managing of server
 
 ----------
-
 **Current development plans and ideas can be viewed here**
+
 https://waffle.io/tacocats/2DEngine/
