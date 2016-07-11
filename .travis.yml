@@ -1,4 +1,10 @@
 lanuage: python
+python:
+  - "3.5"
+
+install:
+  - pip install tkinter
+
 script: python tools/tile_editor/tileEditor.py
 
 branches:
