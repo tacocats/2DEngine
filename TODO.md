@@ -5,13 +5,13 @@ This is a to do page covering the current plans and features that need to be com
 
 ----------
 **Major**
-Things that need to be done first
+
+(Things that need to be done first)
 
  - Clean up client and server code
  - Create a trello page for this
 
 ----------
-
 **Server**
 
  - Server needs to be updated to take requests from various clients and create threads for each of them, currently it only supports one client with way it is written
@@ -20,7 +20,6 @@ Things that need to be done first
  - Authentication for requests such as movement
 
 ----------
-
 **Client**
 
  - Movement System needs to be rewritten in it's own class, with various variables left open and editable for the future API
@@ -42,6 +41,7 @@ Things that need to be done first
 
 ----------
 **API**
+
 This is currently still being decided on how it should be implement. Most likely create a thread for each script inside a script folder on server and run those, while allowing them to interact with basically everything.
 
 -----------
