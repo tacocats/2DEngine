@@ -44,13 +44,13 @@ Things that need to be done first
 **API**
 This is currently still being decided on how it should be implement. Most likely create a thread for each script inside a script folder on server and run those, while allowing them to interact with basically everything.
 
- ----------
+-----------
  **Debugging tools**
 
  - Simple GUI to grab basic client information and display it
  - Simple cli tool to communicate with server for testing
 
- ----------
+-----------
  **Remote control tool**
 
  - Allow connecting to server and managing files etc.
