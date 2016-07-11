@@ -1,6 +1,5 @@
 # 2DEngine
-[![Build Status](https://travis-ci.org/tacocats/2DEngine.svg?branch=master)](https://travis-ci.org/tacocats/2DEngine) 
-
+[![Build Status](https://travis-ci.org/tacocats/2DEngine.svg?branch=master)](https://travis-ci.org/tacocats/2DEngine)
 [![Documentation Status](https://readthedocs.org/projects/2dengine/badge/?version=latest)](http://2dengine.readthedocs.io/en/latest/?badge=latest)
 
 ----------
