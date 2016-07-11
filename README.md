@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/tacocats/2DEngine.svg?branch=master)](https://travis-ci.org/tacocats/2DEngine)
 [![Documentation Status](https://readthedocs.org/projects/2dengine/badge/?version=latest)](http://2dengine.readthedocs.io/en/latest/?badge=latest)
 [![Code Climate](https://codeclimate.com/github/tacocats/2DEngine/badges/gpa.svg)](https://codeclimate.com/github/tacocats/2DEngine)
+[![DUB](https://img.shields.io/dub/l/vibe-d.svg?maxAge=2592000)]()
 
 ----------
 **What is this engine?**
