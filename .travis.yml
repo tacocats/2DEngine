@@ -1,3 +1,6 @@
 lanuage: python
-script:
-  - tools/tile_editor/
+script: python tools/tile_editor/tile_editor/tileEditor.py
+
+branches:
+  only:
+    - master
