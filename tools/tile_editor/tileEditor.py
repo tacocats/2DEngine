@@ -33,6 +33,8 @@ def mousePress(event):
         y = canvas.canvasy(event.y)
 
         tileX, tileY, tileImage = tilesetManip.getSelectedTile()
+        print (tileX)
+        print (tileY)
         levelManip.drawTile(event.widget, x, y, tileImage, tileX, tileY)
     elif (canvas == tileset):
         print("tileset")

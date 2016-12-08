@@ -90,7 +90,10 @@ class levelManipulation():
             divnewX = newX / 16
             divnewY = newY / 16
             # Than we muliply the x + y*xmax since y is xtotal*y tiles down
+            
+            ## Error is here 
             self.levelz.levelTiles[int(divnewX + self.levelz.levelSizeX*divnewY)].x = imageLocX
+            #print (self.levelz.levelTiles[int(divnewX + self.levelz.levelSizeX*divnewY)].x)
             self.levelz.levelTiles[int(divnewX + self.levelz.levelSizeX*divnewY)].y = imageLocY
             self.levelz.levelTiles[int(divnewX + self.levelz.levelSizeX*divnewY)].image = selectedTile
 

@@ -1,0 +1,5 @@
+bug: 
+- self.userTile.x
+- self.userTile.y 
+**are not originally set when application is first loaded (reason why saving makes all 0,0 when you never selected a tile)
+in scene_module.py

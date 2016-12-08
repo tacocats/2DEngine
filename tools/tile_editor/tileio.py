@@ -8,8 +8,11 @@ class exporter():
         f.write(str(level.levelSizeY) + "\n")
 
         for i in level.levelTiles:
+            print (i)
             f.write(str(i.x) + " " + str(i.y) + "\n")
 
 class importer():
     def importLevel():
-        print ("Import file")
+        f = open(fileName + '.2d', 'r')
+        for line in f:
+            print (line)

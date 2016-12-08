@@ -1,0 +1,14 @@
+* Main Features 
+  - [ ] Export the level
+  - [ ] Import levels
+  - [ ] Crease new level
+  - [ ] Load a tileset
+  - [ ] Undo key 
+
+* Features to add after 
+  - [ ] Bucket and pencil tools
+  - [ ] Copy tiles from the level 
+  - [ ] Select more than one tile through highlight
+
+* Ideas 
+  - [ ] Layers
