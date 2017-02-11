@@ -17,7 +17,11 @@ class tilesetManipulation():
         return (fixedX, fixedY)
     # Splits up the tileset and draws it onto the canvas. It also adds the list of tiles to the tile array
     def setTileset(self, widget, tset):
-        self.tImage = Image.open(open('C:/Users/Jack/Desktop/tile_editor/tiles.png', 'rb'))
+        try:
+            self.tImage = Image.open(open('C:/Users/Jack/Desktop/tile_editor/tiles.png', 'rb'))
+        except Exception:
+            print ("error")
+
         fixedImage = ImageTk.PhotoImage(self.tImage)
         self.fixedImage = fixedImage
         theimage= widget.create_image(0, 0, image=fixedImage, anchor="nw")
